@@ -6,7 +6,16 @@
     <title>Hello World!</title>
   </head>
   <body>
-    <img id='image-inner-container' src='https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/220px-Image_created_with_a_mobile_phone.png'>
-    <script src="./js/app.js"></script>
+    <div id='image-wrapper' style='display:none;'>
+      <img id='image-inner-container' src='https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/220px-Image_created_with_a_mobile_phone.png'>
+    </div>
+    <div id='select-wrapper'>
+      <select>
+        <option value='watcher1' selected>Watcher 1</option>
+        <option value='wathcer2'>Watcher 2</option>
+      </select>
+      <button id='select-button'>Select Watcher</button>
+    </div>
+  <script src="./js/app.js"></script>
   </body>
 </html>
