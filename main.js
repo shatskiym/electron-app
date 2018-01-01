@@ -20,6 +20,8 @@ function createWindow () {
   win.on('closed', () => {
     win = null
   })
+
+  win.setFullScreen(true)
 }
 
 app.on('ready', createWindow)
