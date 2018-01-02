@@ -1,6 +1,12 @@
 {
   "dest": "release-builds/",
+<<<<<<< HEAD
   "icon": "",
+=======
+  "icon": "adtop.jpg",
+  "productName": "AdTop",
+  "productDescription": "AdTop - car top for ads",
+>>>>>>> master
   "categories": [
     "Utility"
   ],
