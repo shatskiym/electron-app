@@ -21,7 +21,7 @@ function createWindow () {
     win = null
   })
 
-  win.setFullScreen(true)
+  // win.setFullScreen(true)
 }
 
 app.on('ready', createWindow)
