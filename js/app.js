@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function fetchAds() {
   let xhr = new XMLHttpRequest();
-  xhr.open('GET', `http://localhost:3000/current_adv?ident=${selectedWatcher}`);
+  xhr.open('GET', `https://promotive.herokuapp.com/current_adv?ident=${selectedWatcher}`);
   xhr.onload = () => {
     if (xhr.status === 200) {
       document.getElementById('select-wrapper').style.display = 'none';
@@ -65,7 +65,7 @@ function startCarousel(images) {
 
 function fetchListOfWatchers() {
   var xhr = new XMLHttpRequest();
-  xhr.open('GET', 'http://localhost:3000/select_watcher');
+  xhr.open('GET', 'https://promotive.herokuapp.com/select_watcher');
   xhr.onload = () => {
     if (xhr.status === 200) {
       let response = JSON.parse(xhr.responseText)
