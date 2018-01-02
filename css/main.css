@@ -12,25 +12,34 @@ body {
 h3, h1 {
   text-align: center;
   font-weight: 100;
+  font-family: system-ui;
 }
 
 h1 {
   margin: 0px;
 }
 
-button {
-  padding: 20px;
-  background: transparent;
-  border: 1px solid grey;
-  border-radius: 5px;
-  display: block;
-  margin: 20px;
-}
-
-select {
-  margin: 20px;
-}
-
 #adv-place {
   margin-top: 45vh;
+}
+
+.form-control {
+  height: 50px;
+  display: block;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.25;
+  color: #464a4c;
+  background-color: #fff;
+  background-image: none;
+  background-clip: padding-box;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 0.25rem;
+  transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+  margin-bottom: 20px;
+}
+
+#select-wrapper {
+  margin: 20px;
 }

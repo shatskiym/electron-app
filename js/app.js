@@ -30,7 +30,6 @@ function fetchAds() {
         stopCarousel();
       } else {
         let currentAdv = response;
-        console.log(currentAdv);
         if (currentAdv.length) {
           document.getElementById('adv-place').style.display = 'none';
           document.getElementById('image-inner-container').style.display = 'block'
