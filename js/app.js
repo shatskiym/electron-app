@@ -1,16 +1,18 @@
 let selectedWatcher;
 let carouselInterval;
+let fetchNewDataInterval;
 
 document.addEventListener('DOMContentLoaded', () => {
   fetchListOfWatchers();
   document.getElementById('select-button').addEventListener('click', () => {
     selectedWatcher = document.getElementsByTagName('select')[0].value;
     fetchAds();
+    startFetchNewDataInterval();
   });
 });
 
 function fetchAds() {
-  var xhr = new XMLHttpRequest();
+  let xhr = new XMLHttpRequest();
   xhr.open('GET', `http://localhost:3000/current_adv?ident=${selectedWatcher}`);
   xhr.onload = () => {
     if (xhr.status === 200) {
@@ -52,6 +54,7 @@ function stopCarousel() {
 }
 
 function startCarousel(images) {
+  stopCarousel();
   let currentPicture = 0;
   let imageTag = document.getElementById('image-inner-container');
   carouselInterval = setInterval(() => {
@@ -80,4 +83,10 @@ function fetchListOfWatchers() {
     }
   };
   xhr.send();
+}
+
+function startFetchNewDataInterval() {
+  fetchNewDataInterval = setInterval(function(){
+    fetchAds();
+  }, 60000);
 }
