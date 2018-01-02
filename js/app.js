@@ -1,28 +1,69 @@
-let imagesArray;
+let selectedWatcher;
+let carouselInterval;
 
 document.addEventListener('DOMContentLoaded', () => {
-  fetchListOfElements();
+  fetchListOfWatchers();
   document.getElementById('select-button').addEventListener('click', () => {
-    if (document.getElementsByTagName('select')[0].value == 'watcher1') {
-      imagesArray = [
-        'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/220px-Image_created_with_a_mobile_phone.png',
-        'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Faust_bei_der_Arbeit.JPG/1024px-Faust_bei_der_Arbeit.JPG',
-        'http://lokeshdhakar.com/projects/lightbox2/images/thumb-3.jpg'
-      ];
-    } else {
-      imagesArray = [
-        'https://static.pexels.com/photos/20974/pexels-photo.jpg',
-        'http://www.longevitylive.com/wp-content/uploads/2014/08/shutterstock_90779018.jpg',
-        'https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Save_the_Tree_then_You_can_Save_Your_Earth.jpg/800px-Save_the_Tree_then_You_can_Save_Your_Earth.jpg'
-      ];
-    }
-    imageRefresher();
+    selectedWatcher = document.getElementsByTagName('select')[0].value;
+    fetchAds();
   });
 });
 
-function fetchListOfElements() {
+function fetchAds() {
   var xhr = new XMLHttpRequest();
-  xhr.open('GET', 'http://localhost:3000/active_watchers/all_watchers');
+  xhr.open('GET', `http://localhost:3000/current_adv?ident=${selectedWatcher}`);
+  xhr.onload = () => {
+    if (xhr.status === 200) {
+      document.getElementById('select-wrapper').style.display = 'none';
+      document.getElementById('image-wrapper').style.display = 'block';
+      document.getElementsByTagName('body')[0].style.background = 'black';
+      let alertPlace = document.getElementById('adv-place');
+      let response = JSON.parse(xhr.responseText);
+      if (typeof response == "number") {
+        document.getElementById('image-inner-container').style.display = 'none'
+        alertPlace.innerHTML = '<h1 style="color: white" class="p-100">Here is your confirmation code:</h1><h1 style="color: white; letter-spacing: 20px;">' + response + '</h1>';
+      } else if (typeof response == "boolean") {
+        document.getElementById('image-inner-container').style.display = 'none'
+        alertPlace.innerHTML = '<h1 style="color: white" class="p-100">Enable Your Display</h1>';
+        stopCarousel();
+      } else {
+        let currentAdv = response;
+        console.log(currentAdv);
+        if (currentAdv.length) {
+          document.getElementById('adv-place').style.display = 'none';
+          document.getElementById('image-inner-container').style.display = 'block'
+          document.getElementById('image-inner-container').src = currentAdv[0]
+          startCarousel(currentAdv);
+        } else {
+          document.getElementById('image-inner-container').style.display = 'none'
+          alertPlace.innerHTML = '<h1 style="color: white" class="p-100">There are no advertisings near you.</h1>';
+          stopCarousel();
+        }
+      }
+    }
+  }
+  xhr.send();
+}
+
+function stopCarousel() {
+  if (carouselInterval){
+    clearInterval(carouselInterval);
+  }
+}
+
+function startCarousel(images) {
+  let currentPicture = 0;
+  let imageTag = document.getElementById('image-inner-container');
+  carouselInterval = setInterval(() => {
+    currentPicture += 1;
+    if (currentPicture > images.length - 1) { currentPicture = 0; }
+    imageTag.src = images[currentPicture];
+  }, 5000);
+}
+
+function fetchListOfWatchers() {
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', 'http://localhost:3000/select_watcher');
   xhr.onload = () => {
     if (xhr.status === 200) {
       let response = JSON.parse(xhr.responseText)
@@ -39,21 +80,4 @@ function fetchListOfElements() {
     }
   };
   xhr.send();
-}
-
-function imageRefresher() {
-  document.getElementById('select-wrapper').style.display = 'none';
-  document.getElementById('image-wrapper').style.display = 'block';
-  let imageTag = document.getElementById('image-inner-container');
-  console.log(imageTag);
-  let currentPicture = 0;
-  imageTag.src = imagesArray[currentPicture];
-  setInterval(
-    () => {
-      currentPicture += 1;
-      if (currentPicture > imagesArray.length - 1) { currentPicture = 0 }
-      imageTag.src = imagesArray[currentPicture];
-    },
-    5000
-  );
 }

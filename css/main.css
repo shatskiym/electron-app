@@ -1,6 +1,7 @@
 img {
   width: 100vw;
   height: 100vh;
+  border: none;
 }
 
 body {
@@ -8,9 +9,13 @@ body {
   margin: 0px;
 }
 
-h3 {
+h3, h1 {
   text-align: center;
   font-weight: 100;
+}
+
+h1 {
+  margin: 0px;
 }
 
 button {
@@ -24,4 +29,8 @@ button {
 
 select {
   margin: 20px;
+}
+
+#adv-place {
+  margin-top: 45vh;
 }
