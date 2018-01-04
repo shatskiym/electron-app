@@ -87,5 +87,5 @@ function fetchListOfWatchers() {
 function startFetchNewDataInterval() {
   fetchNewDataInterval = setInterval(function(){
     fetchAds();
-  }, 60000);
+  }, 15000);
 }
