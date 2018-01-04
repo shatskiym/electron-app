@@ -15,13 +15,13 @@ function createWindow () {
     slashes: true
   }))
 
-  // win.webContents.openDevTools()
+  win.webContents.openDevTools()
 
   win.on('closed', () => {
     win = null
   })
 
-  win.setFullScreen(true)
+  // win.setFullScreen(true)
 }
 
 app.on('ready', createWindow)

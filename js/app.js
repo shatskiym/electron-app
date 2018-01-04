@@ -1,11 +1,20 @@
+const fs = require('fs')
+const electron = require('electron')
+const pathToIdentifier = `${electron.remote.app.getPath('desktop')}/identifier.txt`
+
 let selectedWatcher;
 let carouselInterval;
 let fetchNewDataInterval;
+let alertPlace;
 
 document.addEventListener('DOMContentLoaded', () => {
-  fetchListOfWatchers();
-  document.getElementById('select-button').addEventListener('click', () => {
-    selectedWatcher = document.getElementsByTagName('select')[0].value;
+  alertPlace = document.getElementById('adv-place');
+  fs.readFile(pathToIdentifier, 'utf8', (err, data) => {
+    if (err) {
+      alertPlace.innerHTML = `<h1>${err}</h1>`
+      return
+    }
+    selectedWatcher = data;
     fetchAds();
     startFetchNewDataInterval();
   });
@@ -16,17 +25,14 @@ function fetchAds() {
   xhr.open('GET', `https://promotive.herokuapp.com/current_adv?ident=${selectedWatcher}`);
   xhr.onload = () => {
     if (xhr.status === 200) {
-      document.getElementById('select-wrapper').style.display = 'none';
       document.getElementById('image-wrapper').style.display = 'block';
-      document.getElementsByTagName('body')[0].style.background = 'black';
-      let alertPlace = document.getElementById('adv-place');
       let response = JSON.parse(xhr.responseText);
       if (typeof response == "number") {
         document.getElementById('image-inner-container').style.display = 'none'
-        alertPlace.innerHTML = '<h1 style="color: white" class="p-100">Here is your confirmation code:</h1><h1 style="color: white; letter-spacing: 20px;">' + response + '</h1>';
+        alertPlace.innerHTML = '<h1 class="p-100">Here is your confirmation code:</h1><h1 style="letter-spacing: 20px;">' + response + '</h1>';
       } else if (typeof response == "boolean") {
         document.getElementById('image-inner-container').style.display = 'none'
-        alertPlace.innerHTML = '<h1 style="color: white" class="p-100">Enable Your Display</h1>';
+        alertPlace.innerHTML = '<h1 class="p-100">Enable Your Display</h1>';
         stopCarousel();
       } else {
         let currentAdv = response;
@@ -37,7 +43,7 @@ function fetchAds() {
           startCarousel(currentAdv);
         } else {
           document.getElementById('image-inner-container').style.display = 'none'
-          alertPlace.innerHTML = '<h1 style="color: white" class="p-100">There are no advertisings near you.</h1>';
+          alertPlace.innerHTML = '<h1 class="p-100">There are no advertisings near you.</h1>';
           stopCarousel();
         }
       }
@@ -61,27 +67,6 @@ function startCarousel(images) {
     if (currentPicture > images.length - 1) { currentPicture = 0; }
     imageTag.src = images[currentPicture];
   }, 5000);
-}
-
-function fetchListOfWatchers() {
-  var xhr = new XMLHttpRequest();
-  xhr.open('GET', 'https://promotive.herokuapp.com/select_watcher');
-  xhr.onload = () => {
-    if (xhr.status === 200) {
-      let response = JSON.parse(xhr.responseText)
-      let select = document.getElementById('watchers-list');
-      response.forEach((element, number) => {
-        let option = document.createElement("option");
-        option.value = element;
-        option.innerHTML = element;
-        select.appendChild(option);
-      });
-    }
-    else {
-      console.log(xhr.responseText);
-    }
-  };
-  xhr.send();
 }
 
 function startFetchNewDataInterval() {
