@@ -5,12 +5,12 @@ const pathToIdentifier = `${electron.remote.app.getPath('desktop')}/identifier.t
 let selectedWatcher;
 let carouselInterval;
 let fetchNewDataInterval;
+let alertPlace;
 
 document.addEventListener('DOMContentLoaded', () => {
+  alertPlace = document.getElementById('adv-place');
   fs.readFile(pathToIdentifier, 'utf8', (err, data) => {
     if (err) {
-      console.log(err);
-      let alertPlace = document.getElementById('adv-place');
       alertPlace.innerHTML = `<h1>${err}</h1>`
       return
     }
@@ -26,8 +26,6 @@ function fetchAds() {
   xhr.onload = () => {
     if (xhr.status === 200) {
       document.getElementById('image-wrapper').style.display = 'block';
-      document.getElementsByTagName('body')[0].style.background = 'black';
-      let alertPlace = document.getElementById('adv-place');
       let response = JSON.parse(xhr.responseText);
       if (typeof response == "number") {
         document.getElementById('image-inner-container').style.display = 'none'
