@@ -1,11 +1,18 @@
+const fs = require('fs')
+const electron = require('electron')
+const pathToIdentifier = `${electron.remote.app.getPath('desktop')}/identifier.txt`
+
 let selectedWatcher;
 let carouselInterval;
 let fetchNewDataInterval;
 
 document.addEventListener('DOMContentLoaded', () => {
-  fetchListOfWatchers();
-  document.getElementById('select-button').addEventListener('click', () => {
-    selectedWatcher = document.getElementsByTagName('select')[0].value;
+  fs.readFile(pathToIdentifier, 'utf8', (err, data) => {
+    if (err) {
+      console.log(err);
+      return
+    }
+    selectedWatcher = data;
     fetchAds();
     startFetchNewDataInterval();
   });
@@ -16,7 +23,6 @@ function fetchAds() {
   xhr.open('GET', `https://promotive.herokuapp.com/current_adv?ident=${selectedWatcher}`);
   xhr.onload = () => {
     if (xhr.status === 200) {
-      document.getElementById('select-wrapper').style.display = 'none';
       document.getElementById('image-wrapper').style.display = 'block';
       document.getElementsByTagName('body')[0].style.background = 'black';
       let alertPlace = document.getElementById('adv-place');
@@ -61,27 +67,6 @@ function startCarousel(images) {
     if (currentPicture > images.length - 1) { currentPicture = 0; }
     imageTag.src = images[currentPicture];
   }, 5000);
-}
-
-function fetchListOfWatchers() {
-  var xhr = new XMLHttpRequest();
-  xhr.open('GET', 'https://promotive.herokuapp.com/select_watcher');
-  xhr.onload = () => {
-    if (xhr.status === 200) {
-      let response = JSON.parse(xhr.responseText)
-      let select = document.getElementById('watchers-list');
-      response.forEach((element, number) => {
-        let option = document.createElement("option");
-        option.value = element;
-        option.innerHTML = element;
-        select.appendChild(option);
-      });
-    }
-    else {
-      console.log(xhr.responseText);
-    }
-  };
-  xhr.send();
 }
 
 function startFetchNewDataInterval() {
