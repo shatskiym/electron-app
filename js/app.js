@@ -7,9 +7,12 @@ let carouselInterval;
 let fetchNewDataInterval;
 
 document.addEventListener('DOMContentLoaded', () => {
+  document.getElementsByTagName('body')[0].style.background = 'black';
   fs.readFile(pathToIdentifier, 'utf8', (err, data) => {
     if (err) {
       console.log(err);
+      let alertPlace = document.getElementById('adv-place');
+      alertPlace.innerHTML = `<h1 style="color: white">${err}</h1>`
       return
     }
     selectedWatcher = data;
